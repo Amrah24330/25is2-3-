@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Safarov Отдел продаж</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            
+            let theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+
+            
+            const savedAccent = localStorage.getItem('accentColor');
+            if (savedAccent) {
+                document.documentElement.style.setProperty('--accent-color', savedAccent);
+                const hex = savedAccent.replace('#', '');
+                const r = parseInt(hex.substring(0, 2), 16) || 0;
+                const g = parseInt(hex.substring(2, 4), 16) || 102;
+                const b = parseInt(hex.substring(4, 6), 16) || 204;
+                document.documentElement.style.setProperty('--accent-rgb', `${r}, ${g}, ${b}`);
+            }
+        })();
+    </script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <button class="hamburger" id="hamburger" aria-label="Открыть меню">
+            <span></span><span></span><span></span>
+        </button>
+        <h1>CRM Safarov</h1>
+        
+        
+        <div class="theme-controls">
+            <input type="color" id="accent-picker" title="Выбрать цвет" value="#0066cc">
+            <select id="theme-select" aria-label="Выбор темы">
+                <option value="light">Светлая</option>
+                <option value="dark">Темная</option>
+                <option value="corporate-blue">Корпоративная</option>
+            </select>
+        </div>
+    </header>
+<div class="color-picker-wrapper">
+    <input type="color" id="accent-picker" value="#0066cc">
+</div>
+    <div class="overlay" id="overlay"></div>
+
+    <nav id="sidebar">
+        <ul>
+            <li><span class="btn1">Сделки</span></li>
+            <li><span class="btn2">Клиенты</span></li>
+            <li><span class="btn3">Активности</span></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="deals">
+            <h2>Воронка сделок</h2>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="search">Поиск:</label>
+                    <input type="text" id="search" placeholder="Название...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="status-filter">Статус:</label>
+                    <select id="status-filter">
+                        <option value="all">Все</option>
+                        <option value="active">Активные</option>
+                        <option value="new">Новые</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <span>Вид:</span>
+                    <label class="custom-radio">
+                        <input type="radio" name="view" value="table" checked>
+                        <span class="radiomark"></span> Таблица
+                    </label>
+                    <label class="custom-radio">
+                        <input type="radio" name="view" value="cards">
+                        <span class="radiomark"></span> Карточки
+                    </label>
+                </div>
+
+                <button id="reset-btn" class="btn">Сбросить</button>
+            </div>
+
+            <!-- Табличное представление -->
+            <div id="table-view">
+                <div class="table-wrapper">
+                    <table>
+                        <caption>Список текущих сделок</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" data-sort="id">ID <span class="arrow">↑</span></th>
+                                <th scope="col" data-sort="title">Название <span class="arrow">↑</span></th>
+                                <th scope="col" data-sort="status">Статус <span class="arrow">↑</span></th>
+                                <th scope="col" data-sort="date">Дата <span class="arrow">↑</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="deals-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Карточное представление -->
+            <div id="cards-view" class="hidden">
+                <div id="deals-cards-container" class="cards-grid"></div>
+            </div>
+        </section>
+
+        <section id="clients">
+            <h2>Клиенты</h2>
+            <div id="clients-box" class="cards-grid"></div>
+        </section>
+
+        <section id="activities">
+            <h2>История взаимодействий</h2>
+            <ul id="activities-list"></ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <time datetime="2023-10-25">2023</time> Колледж</p>
+    </footer>
+
+    
+    <div id="modal" class="modal-overlay hidden">
+        <div class="modal-content" role="dialog" aria-modal="true">
+            <header class="modal-header">
+                <h3 id="modal-title">Детали</h3>
+                <button id="close-modal" class="close-btn" aria-label="Закрыть">&times;</button>
+            </header>
+            <div class="modal-body" id="modal-body"></div>
+            <footer class="modal-footer">
+                <button class="btn btn-secondary" id="modal-cancel">Отмена</button>
+                <button class="btn btn-primary" id="modal-save">Сохранить</button>
+            </footer>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="renderer.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+
